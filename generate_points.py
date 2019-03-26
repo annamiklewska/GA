@@ -1,10 +1,11 @@
 import numpy as np
 import random
 import matplotlib.pyplot as plt
+import numpy.polynomial.polynomial as p
 
 
 class Points:
-    domain = np.linspace(0, 10, 100)  # 100 evenly distributed points in range 0-10
+    domain = np.linspace(0, 10, 200)  # 100 evenly distributed points in range 0-10
 
     def __init__(self, M):
         '''
@@ -13,10 +14,18 @@ class Points:
         self.M = M
         self.w = Points.generate_parameters(self.M)
         self.y_above, self.y_below = Points.generate_points(self.w)
-        pass
+
+    def get_y_above(self):
+        return self.y_above
+
+    def get_y_below(self):
+        return self.y_below
+
+    def get_values(self):
+        return self.y_above, self.y_below
 
     @staticmethod
-    def polynomial(x, w):
+    def polynomial(x, w):  # it was replaced by polyval
         '''
         :param x: vector of arguments (starting with x^0); Nx1
         :param w: vector of parameters; (M-1)x1
@@ -28,34 +37,37 @@ class Points:
         return np.sum(dm, axis=0)
 
     def draw(self):
-        plt.scatter(Points.domain, self.y_below, c='g')
-        plt.scatter(Points.domain, self.y_above, c='r')
-        plt.plot(Points.domain, Points.polynomial(Points.domain, self.w))
+        domain = Points.domain
+        plt.scatter(domain, self.y_below, c='g')
+        plt.scatter(domain, self.y_above, c='r')
+        plt.plot(domain, p.polyval(domain, self.w))
         plt.show()
 
     @staticmethod
     def generate_points(w):
-        # m = random.random() * 10 * random.choice((-1, 1))
-        # b = random.random() * 10
-        # w = np.array([b, m])
+        '''
+        :param w: vector of parameters
+        :return: y values of points above and below a polynomial line
+        '''
+        domain = Points.domain
+        mx = abs(max(p.polyval(domain, w)))
 
-        domain = np.linspace(0, 10, 100)  # 100 evenly distributed points in range 0-10
-        # y_above = [y(x, m, b) + (abs(random.gauss(10, 50))+5) for x in domain]
-        # y_below = [y(x, m, b) - (abs(random.gauss(10, 50))+5) for x in domain]
-        y_above = [Points.polynomial(domain, w)[i] + (abs(random.gauss(10, 50))) + 5 for i in range(len(domain))]
-        y_below = [Points.polynomial(domain, w)[i] - (abs(random.gauss(10, 50))) + 5 for i in range(len(domain))]
+        y_above = [p.polyval(domain, w)[i] + (abs(random.gauss(10, 50)) * mx) + 5 for i in range(len(domain))]
+        y_below = [p.polyval(domain, w)[i] - (abs(random.gauss(10, 50)) * mx) for i in range(len(domain))]
         return y_above, y_below
 
     @staticmethod
     def generate_parameters(N):
         '''
-        :param N: no of parameters
-        :return: vector of arguments (starting with x^0); Nx1
+        :param N: no of parameters (equal to degree of polynomial)
+        :return: vector of parameters (starting with x^0); Nx1
         '''
-        w = np.zeros(N)
-        for i in range(N):
-            w[i] = random.random() * 10 * random.choice((-1, 1))
-        return w
+        # w = np.zeros(N)
+        # for i in range(N):
+            # w[i] = random.random() * 10 * random.choice((-1, 1))
+        # OR
+        # w = [random.random() * 10 * random.choice((-1, 1))
+        return np.random.uniform(-10, 10, N)
 
 
 '''
