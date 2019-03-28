@@ -2,13 +2,15 @@ import generate_points as pts
 import numpy as np
 import random
 import itertools
+import matplotlib.pyplot as plt
+import numpy.polynomial.polynomial as p
 
-M = 2  # degree of the polynomial separating points
+M = 2  # degree of the polynomial separating points = length of individual
 points = pts.Points(M)
 domain = pts.Points.domain
 pop_size = 50
 generations = 10
-mutation_operator = 2 # no of parents mating
+mutation_operator = 2  # no of parents mating
 
 
 def generate_individual(m):
@@ -45,33 +47,36 @@ def crossover(p1, p2):
 
 
 def mutation(individual, no_mutations):
-    print("before loop: ", individual)
+    '''
+    :param individual: vector of parameters
+    :param no_mutations: no of changes that should be made
+    :return: vector of parameters after mutation [by value so individual is changed already]
+    '''
     for i in range(no_mutations):
         x = random.randint(0, (len(individual) - 1))
         a = random.randint(-10, 10)
         individual[x] = a
-        print("rand: ", a)
-        print(individual[x])
-    return individual
+    return individual  # due to the way python works individual is already changed
 
 
-def fitness_fun():
-    pass
+def fitness_fun(individual, points_above, points_below):
+    err = 0
+    line = p.polyval(domain, individual)  # vector of points
+    for i in range(domain):
+        if line[i] >= points_above[i]:
+            err += 1
+        if line[i] <= points_below[i]:
+            err += 1
+    return err
 
 
-N = 3
-w = generate_individual(N)
-z = generate_individual(N)
+
+
+w = generate_individual(M)
+z = generate_individual(M)
 j = crossover(w, z)
 h = mutation(w, mutation_operator)
-print("individual before, after: ", w, h)
-
-
-# define mutation operator
-
-# define selection operator
-
-# initialise population
+print("individual after mutation: ", h)
 
 
 # visualisation
