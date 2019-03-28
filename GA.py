@@ -3,58 +3,68 @@ import numpy as np
 import random
 import itertools
 
-points = pts.Points(2)
+M = 2  # degree of the polynomial separating points
+points = pts.Points(M)
 domain = pts.Points.domain
 pop_size = 50
 generations = 10
+mutation_operator = 2 # no of parents mating
 
 
-def generate_individual(N):
+def generate_individual(m):
     '''
-    :param N: no of parameters (equal to degree of polynomial)
-    :return: vector of arguments (starting with x^0); Nx1
+    :param m: no of parameters (equal to degree of polynomial)
+    :return: vector of arguments (starting with x^0); mx1
     individual is a vector of parameters of a polynomial function
     '''
-    return np.random.uniform(-10, 10, N)
+    return np.random.randint(-10, 10, m)
 
 
-def generate_population(pop_size, N):
+def generate_population(p_size, m):
     '''
-    :param pop_size: no of individuals in a population
-    :param N: degree of polynomial = no of genes in an individual
+    :param p_size: no of individuals in a population
+    :param m: degree of polynomial = no of genes in an individual
     :return: matrix of vectors of parameters - a population
     '''
-    return [generate_individual(N) for i in range(pop_size)]
+    return [generate_individual(m) for i in range(p_size)]
 
-# define fitness function
 
-# define crossover operation
 def crossover(p1, p2):
-    k = len(p1)  # 5
-    j = int(k/2)  # 2
-    print(j, k)
-    a = p1[0:(j+1)]
-    b = p2[(j+1):k]
-    print("p1: ", p1)
-    print("p2: ", p2)
-    print("a: ", a)
-    print(len(a))
-    print("b: ", b)
-    a = a + b
-    print(a)
-    return a
+    """
+    :param p1: vector of parameters
+    :param p2: vector of parameters
+    :return: vector of parameters (child = first half of p1 + second part of p2)
+    If the length of child is uneven, more values are taken from parent2
+    """
+    k = len(p1)
+    j = int(k/2)
+    a = [p1[i] for i in range(0, j)]
+    b = [p2[i] for i in range(j, k)]
+    child = a + b
+    return child
+
+
+def mutation(individual, no_mutations):
+    print("before loop: ", individual)
+    for i in range(no_mutations):
+        x = random.randint(0, (len(individual) - 1))
+        a = random.randint(-10, 10)
+        individual[x] = a
+        print("rand: ", a)
+        print(individual[x])
+    return individual
+
+
+def fitness_fun():
     pass
 
-N = 5
+
+N = 3
 w = generate_individual(N)
 z = generate_individual(N)
 j = crossover(w, z)
-print(w, z)
-k = 3
-g = w[0:k]
-print(g)
-print("nothing to see here", g)
-print(j)
+h = mutation(w, mutation_operator)
+print("individual before, after: ", w, h)
 
 
 # define mutation operator

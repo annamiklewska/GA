@@ -67,7 +67,7 @@ class Points:
             # w[i] = random.random() * 10 * random.choice((-1, 1))
         # OR
         # w = [random.random() * 10 * random.choice((-1, 1))
-        return np.random.uniform(-10, 10, N)
+        return np.random.randint(-10, 10, N)
 
 
 '''
