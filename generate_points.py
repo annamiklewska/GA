@@ -5,7 +5,8 @@ import numpy.polynomial.polynomial as p
 
 
 class Points:
-    domain = np.linspace(0, 10, 200)  # 100 evenly distributed points in range 0-10
+    #domain = np.linspace(0, 10, 200)  # 100 evenly distributed points in range 0-10
+    domain = [random.random()*10 for _ in range(100)]
 
     def __init__(self, M):
         '''
@@ -41,6 +42,7 @@ class Points:
         plt.scatter(domain, self.y_below, c='g')
         plt.scatter(domain, self.y_above, c='r')
         plt.plot(domain, p.polyval(domain, self.w))
+        plt.axes([-10, -10, 10, 10])
         plt.show()
 
     @staticmethod
@@ -67,7 +69,7 @@ class Points:
             # w[i] = random.random() * 10 * random.choice((-1, 1))
         # OR
         # w = [random.random() * 10 * random.choice((-1, 1))
-        return np.random.randint(-10, 10, N)
+        return np.random.randint(-4, 4, N)
 
 
 '''

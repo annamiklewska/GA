@@ -62,7 +62,7 @@ def mutation(individual, no_mutations):
 def fitness_fun(individual, points_above, points_below):
     err = 0
     line = p.polyval(domain, individual)  # vector of points
-    for i in range(domain):
+    for i in range(len(domain)):
         if line[i] >= points_above[i]:
             err += 1
         if line[i] <= points_below[i]:
